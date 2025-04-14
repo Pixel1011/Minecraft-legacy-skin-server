@@ -1,0 +1,7 @@
+node_modules
+Minecraft
+RetroMCP-GUI-all.jar
+.vscode
+eslint.config.mjs
+options.cfg
+cache.json
