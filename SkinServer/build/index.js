@@ -16,11 +16,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const SkinHandler_1 = __importDefault(require("./SkinHandler"));
 const SkinEditor_1 = __importDefault(require("./SkinEditor"));
+const SkinConverter_1 = __importDefault(require("./SkinConverter"));
 const app = (0, express_1.default)();
-//app.use(express.raw({type:"text/plain"}));
 const port = 3000;
 const skins = new SkinHandler_1.default();
 const editor = new SkinEditor_1.default();
+const Converter = new SkinConverter_1.default();
 function getItem(type, req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const username = req.query.username;
@@ -47,7 +48,6 @@ function deSlim(image) {
         yield editor.loadImg(image);
         editor.a2sS();
         return yield editor.getImg();
-        //return modImg;
     });
 }
 app.get('/MinecraftSkins', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -66,12 +66,15 @@ app.get('/MinecraftSkins', (req, res) => __awaiter(void 0, void 0, void 0, funct
     if (skin[1]) {
         img = Buffer.from(yield deSlim(img));
     }
+    img = yield Converter.loadImage(img);
     res.status(200).send(img);
 }));
 app.get('/MinecraftCloaks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let cape = yield getItem(1, req, res);
-    if (cape == null)
+    if (!cape || !cape[0]) {
+        res.status(404).send();
         return;
+    }
     const response = yield fetch(cape[0]);
     if (response.status != 200) {
         res.status(404).send();
@@ -81,6 +84,9 @@ app.get('/MinecraftCloaks', (req, res) => __awaiter(void 0, void 0, void 0, func
     let img = Buffer.from(yield response.arrayBuffer());
     res.status(200).send(img);
 }));
+app.get('/', (req, res) => {
+    res.redirect("https://cdn.discordapp.com/emojis/1240010178875883600.webp?size=4096&animated=true");
+});
 app.listen(port, () => {
     console.log(`Skin Server running on port: ${port}`);
 });
