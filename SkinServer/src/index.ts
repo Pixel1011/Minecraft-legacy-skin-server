@@ -51,7 +51,7 @@ app.get('/MinecraftSkins', async (req, res) => {
   }
   res.set("Content-Type", "image/png");
   let img = Buffer.from(await response.arrayBuffer());
-  // unslim if slim (stretch) thank you 811Alex https://github.com/811Alex/MCSkinConverter :D
+  // unslim if slim, (stretch) thank you 811Alex https://github.com/811Alex/MCSkinConverter :D
   if (skin[1]) {
     img = Buffer.from(await deSlim(img));
   }
