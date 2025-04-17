@@ -8,7 +8,7 @@ const app = express();
 const port = 3000;
 const skins = new SkinHandler();
 const editor = new SkinEditor();
-const Converter = new SkinConverter();
+let Converter = new SkinConverter();
 
 
 async function getItem(type: number, req: express.Request, res: express.Response) {
@@ -56,6 +56,7 @@ app.get('/MinecraftSkins', async (req, res) => {
     img = Buffer.from(await deSlim(img));
   }
   // convert to 64x32 while keeping details thank you godly https://github.com/godly/minetest-skin-converter :D
+  Converter = new SkinConverter();
   img = Buffer.from(await Converter.loadImage(img));
   res.status(200).send(img);
 

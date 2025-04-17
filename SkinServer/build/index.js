@@ -21,7 +21,7 @@ const app = (0, express_1.default)();
 const port = 3000;
 const skins = new SkinHandler_1.default();
 const editor = new SkinEditor_1.default();
-const Converter = new SkinConverter_1.default();
+let Converter = new SkinConverter_1.default();
 function getItem(type, req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         const username = req.query.username;
@@ -63,10 +63,13 @@ app.get('/MinecraftSkins', (req, res) => __awaiter(void 0, void 0, void 0, funct
     }
     res.set("Content-Type", "image/png");
     let img = Buffer.from(yield response.arrayBuffer());
+    // unslim if slim, (stretch) thank you 811Alex https://github.com/811Alex/MCSkinConverter :D
     if (skin[1]) {
         img = Buffer.from(yield deSlim(img));
     }
-    img = yield Converter.loadImage(img);
+    // convert to 64x32 while keeping details thank you godly https://github.com/godly/minetest-skin-converter :D
+    Converter = new SkinConverter_1.default();
+    img = Buffer.from(yield Converter.loadImage(img));
     res.status(200).send(img);
 }));
 app.get('/MinecraftCloaks', (req, res) => __awaiter(void 0, void 0, void 0, function* () {

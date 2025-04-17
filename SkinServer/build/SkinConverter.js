@@ -57,20 +57,7 @@ const constFacesLeftFrontRight = "lfr";
 const constFaceUnusedL = "unusedL";
 const constFaceUnusedR = "unusedR";
 const constBoxFaces = { 1: constFaceRight, 2: constFaceLeft, 3: constFaceTop, 4: constFaceBottom, 5: constFaceFront, 6: constFaceBack };
-// Minimum width of the UV map if each face is represented by a pixel.
 const constUvWidth = 16;
-// Default face width: 4px (64px/16). Each arm top and bottom face uses 4px�. Each head face uses 8px� (2� 2�UvFaceWidth).
-// Recalculate the uvFaceWidth with the (here unknown) uvImageWidth.
-/* faceArea() defines a rectangular / square face (or area).
-0/ 0 | 1/0  | 2/0  | ... | 15/0
-0/ 1 | 1/1  | 2/1  | ... | 15/1
-                     ...
-0/15 | 1/15 | 2/15 | ... | 15/15
-'x' and 'y' define the start position, 'w' and 'h' define the width and height (not the absolute end point) of the area:
-    (2/0)-(2/2) is the head top face
-Instead of a single face also a larger rectangular / square area with multiple faces may be defined:
-    (0/0)-(15/15) is the whole skin
-*/
 class faceArea {
     constructor(x, y, w, h) {
         this.x = x;
@@ -79,49 +66,6 @@ class faceArea {
         this.h = h;
     }
 }
-/*
-UvArea defines a boxed area which contains the relevant skin part of the selected body part. Supported body parts:
-    Head/Hat, Body/Jacket, LArm/LLeg/LTrouser/LSleeve/RArm/RLeg/RTrouser/RSleeve
-    It offers properties to get "all" faces,
-    to get the "top", "bottom", "left", "front", "right" and "back"  faces,
-    the "lfr" (Left-Front-Right) and the unused "unusedL" and "unusedR" areas.
-
-Typical UV definition for each body part of the character are:
-Head and Hat: w=h=d=2
-|  | w| w|
-+--+--+--+--+--
-|  |##|##|  | d (unusedL, top, bottom, unusedR)
-|  |##|##|  |
-+==+==+==+==+==
-|##|##|##|##| h (left, front, right, back)
-|##|##|##|##|
-+--+--+--+--+--
-| d| w| d| w|
-
-Body and Jacket: w=2, h=3 and d=1
-| | w| w|
-+-+--+--+-+--
-| |##|##| | d
-+=+==+=**=+==
-|#|##|#|##|
-|#|##|#|##| h
-|#|##|#|##|
-+-+--+--+-+--
-|d| w|d| w|
-
-Arms and Legs: w=1, h=3 and d=1
-| |w|w| |
-+-+-+-+-+--
-| |#|#| | d
-+=+=+=+=+==
-|#|#|#|#|
-|#|#|#|#| h
-|#|#|#|#|
-+-+--+--+--
-|d|w|d|w|
-
-(w = width, h = height, d = depth)
-*/
 class UvArea {
     // supported types:
     constructor(type) {
@@ -248,6 +192,8 @@ class SkinConverter {
     // Main function to load the image after the user selected it
     loadImage(img) {
         return __awaiter(this, void 0, void 0, function* () {
+            this.dstCanvas = undefined;
+            this.dstImg = undefined;
             let srcImg = yield (0, canvas_1.loadImage)(img);
             if (srcImg.height == 32)
                 return img;

@@ -200,7 +200,8 @@ export default class SkinConverter {
 
   // Main function to load the image after the user selected it
   async loadImage(img : Buffer) {
-	
+    this.dstCanvas = undefined;
+    this.dstImg = undefined;
     let srcImg = await CanvasLoadImage(img);
     if (srcImg.height == 32) return img;
     // function continues in imageLoaded() as soon as the image is loaded
