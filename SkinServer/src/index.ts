@@ -7,7 +7,7 @@ const app = express();
 
 const port = 3000;
 const skins = new SkinHandler();
-const editor = new SkinEditor();
+let editor = new SkinEditor();
 let Converter = new SkinConverter();
 
 
@@ -32,6 +32,7 @@ async function getItem(type: number, req: express.Request, res: express.Response
 }
 
 async function deSlim(image : Buffer) {
+  editor = new SkinEditor();
   await editor.loadImg(image);
   editor.a2sS();
   return await editor.getImg();

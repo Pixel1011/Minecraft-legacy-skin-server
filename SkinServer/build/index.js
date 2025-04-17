@@ -20,7 +20,7 @@ const SkinConverter_1 = __importDefault(require("./SkinConverter"));
 const app = (0, express_1.default)();
 const port = 3000;
 const skins = new SkinHandler_1.default();
-const editor = new SkinEditor_1.default();
+let editor = new SkinEditor_1.default();
 let Converter = new SkinConverter_1.default();
 function getItem(type, req, res) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -45,6 +45,7 @@ function getItem(type, req, res) {
 }
 function deSlim(image) {
     return __awaiter(this, void 0, void 0, function* () {
+        editor = new SkinEditor_1.default();
         yield editor.loadImg(image);
         editor.a2sS();
         return yield editor.getImg();
